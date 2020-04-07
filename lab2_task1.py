@@ -17,7 +17,7 @@ def main():
             incorrect_input = True
             print('Input integer number, please')
         if choose != 0 and choose != 1 and choose != 2:
-            print('Number must be 0 or 1')
+            print('Number must be 0 or 1 or 2')
             incorrect_input = True
 
     arr = []
