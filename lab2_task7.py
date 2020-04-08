@@ -21,6 +21,12 @@ def fibonacci(n):
 def main():
     inp = 0
     in_correct_input = True
+    if len(sys.argv) == 2 and (sys.argv[1]).isnumeric():
+        m = int(sys.argv[1])
+        print("Fibonacci {n}\'th number is {fib}".format(n=m,
+                                                         fib=fibonacci(m)))
+        print("Leonardo {y}\'th number is {leo}".format(y=m, leo=
+        (2 * fibonacci(m + 1) - 1)))
     while inp != 'exit':
         inp = input("Enter natural number, "
                     "or arg to be displayed in Leonardo's or exit to exit: ")
@@ -28,20 +34,23 @@ def main():
             break
         else:
             try:
-                if inp == 'arg':
-                    if len(sys.argv) > 1:  # if there is an argument after the name
-                        # of the program
-                        n = int(sys.argv[1])  # trying to convert to an integer type
-                        in_correct_input = False  # when entered int
+                if inp == 'arg':  # if there is an argument after the name
+                    # of the program
+                    if len(sys.argv) > 1:
+                        n = int(sys.argv[1])
+                        in_correct_input = False
                     else:
-                        in_correct_input = True
+                        in_correct_input = True  # trying to convert to an integer type
                 else:
                     n = int(inp)
-                    in_correct_input = False  # when entered int
+                    in_correct_input = False
+                # when entered int
                 if n < 0:
                     in_correct_input = True
                 elif n == 0:
                     in_correct_input = True
+                elif n == 2:
+                    exit()
             except ValueError:
                 in_correct_input = True
                 print('Input integer number, please')
