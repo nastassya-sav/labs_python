@@ -53,7 +53,7 @@ def json_to_obj(s):
                 result.append(json_to_obj(s[startElement:ch])) # add the
                 # object translated from json to the list,
                 # ch-comma (we don’t take it)
-                startElement = ch + 1 # without spaces
+                startElement = ch + 2
             if ch == s.__len__() - 2:
                 result.append(json_to_obj(s[startElement:ch + 1]))
             if s[ch] == '"':
