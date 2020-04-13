@@ -1,42 +1,59 @@
-# в формате json список и кортеж одно и то же
-# на листике-схемка с ch
-
 def json_to_obj(s):
-    if s[0] == '{':  # если фигурная скобка, то это словарь
+    if s[0] == '{':  # dictionary
         result = {}
-        startElement = 1 # нужен, чтобы запоминать начало для элемента разбиения
-        insideFirstBreakets = -1  # проверить находимся ли мы в квадратных скобках
+        startElement = 1 # needed to remember the start for a split element
+        insideFirstBreakets = -1  # check if we are in square brackets
         insideSecondBreakets = -1
         insideWord = -1
         temp = []
-        for ch in range(1, s.__len__() - 1):  # прохожимся по содержимому внутри фигурных скобок( скобки игнорируем)
-            if s[ch] == '"':  # если ", то или воши в слово, или вышли из него
-                insideWord *= -1  # (-1)-False(вне слова), 1-True(внутри слова)
-            elif (s[ch] == '[' or s[ch] == ']') and insideWord == -1:  # если попали на начало/конец списка/кортежа , insideWord == -1 (чтобы "ab[dc" не было)(список/rjhnt;)
-                insideFirstBreakets *= -1  # (-1)-False(вне скобок), 1-True(внутри скобок)
-            elif (s[ch] == '{' or s[ch] == '}') and insideWord == -1:    # если попали на начало/конец списка/кортежа , insideWord == -1 (чтобы "ab{dc" не было)(cловарь)
-                insideSecondBreakets *= -1  # (-1)-False(вне скобок), 1-True(внутри скобок)
-            if s[ch] == ',' and insideWord == -1 and insideFirstBreakets == -1 and insideSecondBreakets == -1:
-                # если мы попали на запятую, не находясь при этом в слове/списке/кортеже/словаре
-                temp.append(s[startElement:ch])  # в массив temp добавляем текст, содержащий ключ с его значением
-                startElement = ch + 2 # чтобы не считать сам пробел и запятую
-            if ch == s.__len__() - 2:  # если добрались до конца последнего слова(s.__len__() - 2 - последний элементр внутри скобок)
-                temp.append(s[startElement:ch + 1])  # добавляем последнюю пару пару ключ:значение
-        for k in temp:  # проходимся по парам ключ:значение
-            key, value = k.split(':')  # отделяем по двоеточию
-            result[key[1:key.__len__() - 1]] = json_to_obj(value[1:value.__len__()])  #key[1:key.__len__() - 1] -ключ без кавычек, добавляем в качестве значение обьект, переведенный из формата json
+        for ch in range(1, s.__len__() - 1):  # go through the contents inside
+            # curly brackets (ignore the brackets)
+            if s[ch] == '"': # if ", then either entered the word or left it
+                insideWord *= -1  # (-1) -False (outside the word),
+                # 1-True (inside the word)
+            elif (s[ch] == '[' or s[ch] == ']') and insideWord == -1:  # if at
+                # the beginning / end of the list / tuple
+                insideFirstBreakets *= -1  # (-1)-False (outside the
+                # brackets), 1-True (inside the brackets)
+            elif (s[ch] == '{' or s[ch] == '}') and insideWord == -1: # if at
+                # the beginning / end of the list / tuple
+                insideSecondBreakets *= -1 # (-1)-False (outside the
+                # brackets), 1-True (inside the brackets)
+                # if on a comma, without being in the word / list / tuple /
+                # dictionary
+            if s[ch] == ',' and insideWord == -1 and \
+                    insideFirstBreakets == -1 and insideSecondBreakets == -1:
+                temp.append(s[startElement:ch])  # add the text containing the
+                # key with its value to the temp array
+                startElement = ch + 2 # to not count the space and comma
+            if ch == s.__len__() - 2:  # if you get to the end of the last
+                # word (s .__ len __ () - 2 - the last element inside the
+                # brackets)
+                temp.append(s[startElement:ch + 1])  # add the last pair
+                # key: value
+                print(temp)
+        for k in temp:  # go through the pairs key: value
+            key, value = k.split(':')
+            # key [1: key .__ len __ () - 1] - the key without quotes, add the
+            # object translated from json format as the value
+            result[key[1:key.__len__()-1 ]] = json_to_obj(
+                value[1: value.__len__()])
         return result
-    elif s[0] == '[': #список/кортеж
+    elif s[0] == '[': # list / tuple
         result = []
         insideWord = -1
         insideFirstBreakets = -1
         insideSecondBreakets = -1
         startElement = 1
         for ch in range(1, s.__len__() - 1):
-            if insideWord == -1 and insideFirstBreakets == -1 and insideSecondBreakets == -1 and s[ch] == ',':
-                # если мы попали на запятую, не находясь при этом в слове/списке/кортеже/словаре
-                result.append(json_to_obj(s[startElement:ch])) # добавляем в список обьект, переведенный из json, ch-запятая(ее не берем)
-                startElement = ch + 1 #без пробелов
+            # if we are on a comma without being in the word / list / tuple /
+            # dictionary
+            if insideWord == -1 and insideFirstBreakets == -1 and\
+                    insideSecondBreakets == -1 and s[ch] == ',':
+                result.append(json_to_obj(s[startElement:ch])) # add the
+                # object translated from json to the list,
+                # ch-comma (we don’t take it)
+                startElement = ch + 1 # without spaces
             if ch == s.__len__() - 2:
                 result.append(json_to_obj(s[startElement:ch + 1]))
             if s[ch] == '"':
@@ -46,18 +63,18 @@ def json_to_obj(s):
             elif (s[ch] == '{' or s[ch] == '}') and insideWord == -1:
                 insideSecondBreakets *= -1
         return result
-    elif s[0] == '"':  # если ", то у нас просто слово
-        return s[1:s.__len__() - 1]  # возвращаем слово без кавычек
+    elif s[0] == '"':  # if ", then the word
+        return s[1:s.__len__() - 1]  # return the word without quotes
     elif s == 'true':
         return True
     elif s == 'false':
         return False
     elif s == 'null':
         return None
-    elif s.__contains__('.'):  # если ., то float
+    elif s.__contains__('.'):  # if., then float
         return float(s)
     else:
-        return int(s)  #иначе целое число
+        return int(s)  # else an integer
 
 
 def main():
@@ -68,7 +85,7 @@ def main():
             choose = int(input('0. Input data from file\n1. '
                                'Input data from keyboard\n2. '
                                'To exit\n'))
-            incorrect_input = False  # when entered int
+            incorrect_input = False
         except ValueError:
             incorrect_input = True
             print('Input integer number, please')
@@ -86,8 +103,6 @@ def main():
         exit()
     obj = json_to_obj(stringInJSON)
     print(obj)
-    # print(obj['ndsjk'][1])
-
 
 if __name__ == "__main__":
     main()
