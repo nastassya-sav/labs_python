@@ -1,27 +1,29 @@
-# во время работы любых программ под них выделяется оперативная память за счет использования переменных(память под них)
-# оперативная память расходуется только на ресурсы, выделяемые во время выполнения программы
-
 import sys
 import os
 
 
-def msort(x): # сортирует слова в строке
+def msort(x): # sorts words in a line
     result = []
     if len(x) < 2:
         return x
-    left = msort(x[:int(len(x) / 2)])
-    right = msort(x[int(len(x) / 2):])
-    while (len(left) > 0) or (len(right) > 0):
-        if len(left) > 0 and len(right) > 0:
-            if len(left[0]) > len(right[0]):
-                result.append(right[0])
-                right.pop(0)
+    print(len(x))
+    left = msort(x[:int(len(x) / 2)])  # get the sorted left half of the array
+    #print(left)
+    right = msort(x[int(len(x) / 2):])  # get the sorted right half of the
+    # array
+    while (len(left) > 0) or (len(right) > 0):  # while at least one of the
+        # arrays is not empty
+        if len(left) > 0 and len(right) > 0:  # until both arrays are empty
+            if len(left[0]) > len(right[0]):  # compare the first elements of
+                # both arrays along the word length
+                result.append(right[0]) # write the smaller one to the result
+                right.pop(0)  # remove this smaller one
             else:
-                result.append(left[0])
-                left.pop(0)
-        elif len(right) > 0:
-            for i in right:
-                result.append(i)
+                result.append(left[0]) # write the smaller one to the result
+                left.pop(0)  # remove this smaller one
+        elif len(right) > 0:  # unless the right one is empty
+            for i in right:  # go through the elements of the right array
+                result.append(i)  # assign to the result all right array
                 right.pop(0)
         else:
             for i in left:
@@ -29,18 +31,20 @@ def msort(x): # сортирует слова в строке
                 left.pop(0)
     return result
 
-def countOfSymbols(obj): # подсчёт символов в строке
+
+def countOfSymbols(obj): # counting characters per line
     result = 0
-    for i in obj:
+    for i in obj: # go through the words of the list
         result += len(i)
     return result
 
-def msort2(x): # сортирует строки
+def msort2(x): # sorts lines
     result = []
     if len(x) < 2:
         return x
-    left = msort2(x[:int(len(x) / 2)]) # берется левая половина( если элементов 7, возьмет первые 3)
-    # делим левую половину и так далее пока не останется 1 элемент
+    left = msort2(x[:int(len(x) / 2)]) # the left half is taken (if there are
+    # 7 elements, it will take the first 3)
+    # divide the left half and so on until 1 element is left
     os.system("cls")
     print('Sorting. Wait, please..')
     right = msort2(x[int(len(x) / 2):])
@@ -48,7 +52,8 @@ def msort2(x): # сортирует строки
     print('Sorting. Wait, please...')
     while (len(left) > 0) or (len(right) > 0):
         if len(left) > 0 and len(right) > 0:
-            if countOfSymbols(left[0]) > countOfSymbols(right[0]):
+            if countOfSymbols(left[0]) > countOfSymbols(right[0]):  # compare
+                # rows by the number of characters without a space
                 result.append(right[0])
                 right.pop(0)
             else:
@@ -70,7 +75,8 @@ def main():
     incorrect_input = True
     list = []
     if len(sys.argv) > 1:
-        filename = sys.argv[1] #если через команденую строку задаем название файла, в который запишем результат
+        filename = sys.argv[1] # if through the command line we set the name
+        # of the file in which we write the result
     while incorrect_input:
         try:
             choose = int(input('0. Input data from file\n1. '
@@ -85,33 +91,45 @@ def main():
             incorrect_input = True
     if choose == 0:
         f = open('file2.txt', 'r')
-        procent = -1
-        linesOfFile = f.readlines()  # список строк исходного файла
-        count = len(linesOfFile)  # количество строк исходного файла
+        percent = -1
+        linesOfFile = f.readlines()  #list of lines of the source file
+        count = len(linesOfFile)  # number of lines of the source file
         ind = 0
-        #for line in linesOfFile:  # проходимся по строкам исходного файла
-        #    ind += 1  # отмеряем текущую строку
-        #    if procent != ind * 100 // count:  # выводи только, когда есть изменение в процентах
-        #        procent = ind * 100 // count  # меняем процент
-        #        os.system("cls")
-        #        print("Procent of reading file is {p}".format(p = procent))
-        #    list.append(msort(line[:line.__len__() - 1].split(' '))) #line[:line.__len__() - 1 - список символов строки без последнего символа(переход на новую строку), разбиваем по пробелам, сортировка внутри строки по длине слов, добавляем в список
+        for line in linesOfFile: # go through the lines of the source file
+            ind += 1  # measure the current line
+            if percent != ind * 100 // count: # output only when there is a
+                # percentage change
+                percent = ind * 100 // count  # change percentage
+                os.system("cls")
+                print("Percent of reading file is {p}".format(p = percent))
+                # line [: line .__ len __ () - 1 - list of words in a line
+                # without the last character (go to a new line),
+                # divide by spaces, sorting inside a line by the length of
+                # words, add to the list
+            list.append(msort(line[:line.__len__() - 1].split(' ')))
     elif choose == 1:
         count = int(input('Input count of lines\n'))
         for i in range(count):
-            list.append(msort(input('Input line\n').split(' '))) # разбивает строки по проблелам и сортирует по длине слов
+            list.append(msort(input('Input line\n').split(' '))) # breaks
+            # lines by spaces and sorts by word length
     elif choose == 2:
         exit()
-    list = msort2(list) # списку присваиваем его же, но только отсортированный по количеству символов в строке
+    list = msort2(list) # assign the list to it, but only sorted by the number
+    # of characters in the string
     text = ''
-    procent = -1 # проценты выводятся, когда есть разница между ними, соответсвенно если введем 0, но будет равенство
-    for i in range(len(list)): # от 0 до количества строк-1
-        if procent != (i + 1) * 100 // len(list): #len(list)-количество строк
-            procent = (i + 1) * 100 // len(list)
+    percent = -1 # percentages are displayed when there is a difference
+    # between them,
+    # respectively, if we enter 0, but there will be equality
+    for i in range(len(list)): # go from 0 to the number of lines-1,
+        # len (list) - number of lines
+        if percent != (i + 1) * 100 // len(list):
+            percent = (i + 1) * 100 // len(list)
             os.system("cls")
-            print("Procent of writing file is {p}".format(p=procent))
-        for word in list[i]: # прохоимся по словам в каждой строке, list[i]-i-ая строка
-            text += ''.join(word) + ' ' # приводим к str, был ['g','h','t','y']-> 'ghty',''.join(word)- наьор символов соединяет в одно слово к результату приписываем слова через пробел
+            print("Percent of writing file is {p}".format(p=percent))
+        for word in list[i]: # go through the words in each line,
+            # list [i] -i-th line
+            text += ''.join(word) + ' ' # lead to str, assign the words
+            # separated by spaces to the result
         text += '\n'
     my_file = open(filename + '.txt', 'w')
     my_file.write(text)
