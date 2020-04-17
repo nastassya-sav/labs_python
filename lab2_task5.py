@@ -37,7 +37,23 @@ def objectToJSON(obj):
 
 
 def main():
-    x = input("enter\n")
+    x = {
+        "name": "John",
+        "age": 30,
+        "city": "New York",
+        "array": [1, 1.25, True, "fdsfdsfsd"],
+        "dictionary": {
+            "first": 25,
+            "second": 'some text',
+            "third": ['new text', 56, False],
+            "fourth": (True, 67, [98, 54, 'hfsdjkhfkds', {
+                "firstElement": 'frst',
+                "secondElement": 2222,
+                "thirdElement": [45, 'text', (45, 78.95, False, 'fjhdskf')]
+            }]),
+        },
+        "zero": None
+    }
     incorrect_input = True
     choose = 0
     while incorrect_input:
