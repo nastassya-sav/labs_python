@@ -1,40 +1,40 @@
 import sys
 
-def flatten_it(obj):
-    res = []
-    for it in obj: #проходимся по кажому элементу списка
-        if it == obj: #если есть самоссылка -> выбрасываем исключение
+
+def flatten_it(y):
+    for x in y:
+        if x == y:  #if self-referencing array
             raise ValueError
-        try:
-            iter(it) # пытаемся получить итератор объекта, если не получается- вылетает исключение
-            res += flatten_it(it) # добавляем к результату линеаризированный объект
-        except TypeError:
-            res.append(it) # просто добавляем к результату объект
-    return res
+        if hasattr(x, '__iter__') and not isinstance(x, str): #if the element
+            # is iterable but not a string
+            yield from flatten_it(x)  #recursion
+        else:
+            if x.isnumeric(): #if the number
+                yield int(x)
+            else:  #if a string
+                yield x
+
 
 def main():
     obj = []
     if len(sys.argv) > 1:
-        obj =(sys.argv[1]) #sys.argv[1] -> список
+        obj =sys.argv[1::]  # we take everything after the name of the program
+        new = []
+        for i in obj:
+            i = i.replace("[", "")
+            i = i.replace("]", "")
+            i = i.replace(",", "")
+            new.append(i)
     else:
-        obj = [1,[2,[3,4,5]],6,[7,8],9,[10,[11,12,[13,[14,15]]]]]
-        obj[0] = obj #самоссылающийся массив, 1 элемент массива будет ссылаться (указывает на) на этот же массив
+        new = [1,[2,[3,4,5]],6,[7,8],9,[10,[11,12,[13,[14,15]]]]]
+        new[0] = new  #condition of self-referencing array
     try:
-        print(flatten_it(obj))
-    except ValueError: #если самоссылающийся массив содержится в массиве
+        u = []  #we write the result into it
+        for i in flatten_it(new):
+           u.append(i)
+        print(u)
+    except ValueError:
         print('Array that refers to itself')
 
 
-
-
-
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-    main()
+main()
