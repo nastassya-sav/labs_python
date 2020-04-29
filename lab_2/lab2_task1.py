@@ -31,7 +31,7 @@ def keyboard_option():
 
 def file_option():
     arr = []
-    f = open(r'lab_1.txt', 'r')  # open the text file in read mode
+    f = open('lab_1.txt', 'r')  # open the text file in read mode
     for line in f:  # go through the lines
         array_with_numbers = line.split()  # splits a line into numbers
         # according to spaces
