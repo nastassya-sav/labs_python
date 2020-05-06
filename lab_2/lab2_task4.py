@@ -9,7 +9,7 @@ def flatten_it(y):
             # is iterable but not a string
             yield from flatten_it(x)  #recursion
         else:
-            if x.isnumeric(): #if the number
+            if isinstance(x, int) or isinstance(x, float): #if the number
                 yield int(x)
             else:  #if a string
                 yield x
