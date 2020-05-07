@@ -1,0 +1,1 @@
+{"name": "John", "age": 30, "city": "New York", "array": [1, 1.25, true, "fdsfdsfsd"], "dictionary": {"first": 25, "second": "some text", "third": ["new text", 56, false], "fourth": [true, 67, [98, 54, "hfsdjkhfkds", {"firstElement": "frst", "secondElement": 2222, "thirdElement": [45, "text", [45, 78.95, false, "fjhdskf"]]}]]}, "zero": null}
